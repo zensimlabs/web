@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
-export function CopyCommand({ command }: { command: string }) {
+export function InstallCommand({ command }: { command: string }) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
@@ -16,18 +17,20 @@ export function CopyCommand({ command }: { command: string }) {
   }
 
   return (
-    <div className="flex w-full max-w-2xl items-stretch overflow-hidden rounded-lg border border-line bg-ink-soft">
-      <code className="flex-1 overflow-x-auto px-4 py-3 text-left font-mono text-sm whitespace-nowrap text-text">
-        <span className="text-muted select-none">$ </span>
+    <div className="bg-card flex w-full max-w-xl items-stretch overflow-hidden rounded-lg border">
+      <code className="text-foreground flex-1 overflow-x-auto px-4 py-3 font-mono text-sm whitespace-nowrap">
+        <span className="text-muted-foreground select-none">$ </span>
         {command}
       </code>
-      <button
+      <Button
         onClick={copy}
+        variant="ghost"
+        size="sm"
         aria-label="Copy the install command"
-        className="shrink-0 cursor-pointer border-l border-line px-4 font-mono text-xs tracking-wide text-muted transition hover:bg-accent-soft hover:text-accent"
+        className="text-muted-foreground hover:text-foreground h-auto shrink-0 rounded-none border-l px-4 font-mono text-xs"
       >
         {copied ? "copied" : "copy"}
-      </button>
+      </Button>
     </div>
   );
 }
