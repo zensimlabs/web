@@ -1,3 +1,11 @@
 name = "zensim-web"
 compatibility_date = "2026-09-01"
-pages_build_output_dir = "out"
+
+routes = [
+  { pattern = "zensimlabs.com", custom_domain = true },
+  { pattern = "www.zensimlabs.com", custom_domain = true },
+]
+
+[assets]
+directory = "./out"
+not_found_handling = "404-page"
