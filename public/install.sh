@@ -14,6 +14,7 @@
 
 set -eu
 
+DL="${ZENSIM_DOWNLOAD_BASE:-https://dl.zensimlabs.com}"
 REPO="zensimlabs/zensim"
 VERSION="${ZENSIM_VERSION:-latest}"
 INSTALL_DIR="${ZENSIM_INSTALL_DIR:-$HOME/.local/bin}"
@@ -29,8 +30,7 @@ case "$os-$arch" in
   Linux-x86_64)        target="x86_64-unknown-linux-gnu" ;;
   Linux-aarch64)       target="aarch64-unknown-linux-gnu" ;;
   *) die "no prebuilt binary for $os $arch yet.
-  Build it instead — it needs only a Rust toolchain:
-    git clone https://github.com/$REPO && cd zensim && ./install.sh" ;;
+  Every platform can build it instead; it needs only a Rust toolchain." ;;
 esac
 
 case "$os" in
@@ -47,13 +47,11 @@ elif have sha256sum; then sha="sha256sum"
 else sha=""; fi
 
 if [ "$VERSION" = latest ]; then
-  base="https://github.com/$REPO/releases/latest/download"
-  tag="$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
-        | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p' | head -1)"
-  [ -n "$tag" ] || die "no release published yet for $REPO"
-  VERSION="${tag#v}"
+  base="$DL/latest"
+  VERSION="$(curl -fsSL "$base/version" 2>/dev/null | tr -d '[:space:]')"
+  [ -n "$VERSION" ] || die "nothing published at $base"
 else
-  base="https://github.com/$REPO/releases/download/v$VERSION"
+  base="$DL/v$VERSION"
 fi
 
 file="zensim-$VERSION-$target.tar.gz"
